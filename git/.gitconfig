@@ -1,0 +1,16 @@
+[user]
+	name = Niels De Graef
+	email = nielsdegraef@gmail.com
+[color]
+	ui = true
+[core]
+	editor = vim
+[push]
+	default = current
+[help]
+	autocorrect = 1
+[advice]
+  statusHints = false
+[github]
+  user = nielsdg
+
