@@ -75,5 +75,5 @@ URxvt.colorUL:      #87afd7
 ! dzen2 settings
 !-------------------------------------------------------------------------------
 
-dzen2.font: xft:Roboto:pixelsize=13:antialias=true:hinting=true
+/* dzen2.font: xft:Roboto:pixelsize=13:antialias=true:hinting=true */
 
