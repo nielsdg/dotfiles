@@ -13,45 +13,44 @@ fi
 x=${geometry[0]}
 y=${geometry[1]}
 panel_width=${geometry[2]}
-panel_height=16
+panel_height=18
 # font="xft:Roboto:pixelsize=13:antialias=true:hinting=true"
-font="xft:Source\ Code\ Pro\ Medium:pixelsize=13:antialias=true:hinting=true"
-bgcolor='#1d1d1d'
-selbg='#989898'
+font='xft:Source\ Code\ Pro\ Medium:pixelsize=13:antialias=true:hinting=true'
+foreground="#000000"
+background='#68afcf'
+selbg='#185279'
 selfg='#2f2f2f'
-wifi_int="wlp2s0"
+wifi_int='wlp2s0'
 
-panel_dir="/home/niels/.config/herbstluftwm/panel"
+panel_dir="$HOME/.config/herbstluftwm/panel"
 bmp_dir="${panel_dir}/bitmaps"
 
 function uniq_linebuffered() {
   awk '$0 != l { print ; l=$0 ; fflush(); }' "$@"
 }
 
-function getPercentage() {
-  echo "scale=2;$1" | bc | cut -d\. -f1
-}
-
+# Note: we don't do this during the data generation phase because this seems to
+# be a intensive calculation somehow.
 function printWorkspaces() {
-  IFS=$'\t' read -ra tags <<< "$(hc tag_status $monitor)"
-  # TODO: get rid of the float-desktop, cause this doesn't work
-  unset $tags[${#tags[@]}-1]
+  tags=( $(herbstclient tag_status $monitor) )
+  unset tags[${#tags[@]}-1]
+
   for i in "${tags[@]}" ; do
     case ${i:0:1} in
-      '#')
+      '#') # tag is viewed on the specified MONITOR and it is focused
         echo -n "^bg($selbg)^fg($selfg)"
         ;;
-      '+')
+      '+') # tag is viewed on the specified MONITOR but this monitor is not focused
         echo -n "^bg(#9CA668)^fg(#141414)"
         ;;
-      ':')
+      ':') # tag is not empty
         echo -n "^bg()^fg(#ffffff)"
         ;;
-      '!')
+      '!') # tag contains an urgent window
         echo -n "^bg(#FF0675)^fg(#141414)"
         ;;
       *)
-        echo -n "^bg()^fg(#ababab)"
+        echo -n "^bg()^fg()"
         ;;
     esac
     uppercase=$(echo ${i:1} | tr '[:lower:]' '[:upper:]')
@@ -63,25 +62,29 @@ function generateData() {
     while true ; do
       # Date
       date_=$(date +'%H:%M')
+      echo -e "date\t$date_"
 
       # Battery
-      ba=$(acpi | sed 's/.*, \([0-9]*\)%/\1/')
-      bab=$(${panel_dir}/bat_xbm_for_perc.py $ba )
-      bica="${bmp_dir}/${bab}"
+      batt_perc=$(acpi | sed 's/.*, \([0-9]*\)%/\1/')
+      batt_num=$(( (batt_perc - 1)/10 ))
+      batt_ico="^i(${bmp_dir}/bat_${batt_num}.xbm)"
+      echo -e "battery\t$batt_ico $batt_perc%"
 
       # WiFi
       ssid=$(iwgetid -r)
-      strngth=$(iwconfig $wifi_int | fgrep 'Link Quality' | sed 's/^.*Link Quality=\([0-9]*\/[0-9]*\).*/scale=2;100*\1/' | bc | cut -d\. -f1)
       if [ -z "$ssid" ] ; then
-        wifi_ico="^i(${bmp_dir}/wifi_0.xbm)"
+        wifi_ico="^i(${bmp_dir}/wifi_none.xbm)"
       else
-        wifi_ico=$(${panel_dir}/wifi_xbm_for_perc.py $strngth )
-        wifi_ico="^i(${bmp_dir}/${wico})"
+        strngth=$(iwconfig $wifi_int 2>/dev/null | fgrep 'Link Quality' | sed 's/^.*Link Quality=\([0-9]*\/[0-9]*\).*/scale=2;100*\1/' | bc | cut -d\. -f1)
+        wifi_num=$(( (strngth + 19)/20 ))
+        wifi_ico="^i(${bmp_dir}/wifi_${wifi_num}.xbm)"
       fi
+      echo -e "wifi\t$ssid $wifi_ico"
 
       # Memory load
-      perc_mem=$(free | sed -n '2p' | awk '{print "scale=2;100*"$3"/"$2}' | bc | cut -d\. -f1)
+      perc_mem=$(free | awk 'NR==2{print "scale=2;100*"$3"/"$2; exit}' | bc | cut -d\. -f1)
       mem_ico="^i(${bmp_dir}/mem.xbm)"
+      echo -e "load\t$mem_ico $perc_mem%"
 
       # Volume
       perc_vol=$(amixer -D pulse get Master | grep -o '[0-9][0-9]*%' | head -1)
@@ -90,13 +93,7 @@ function generateData() {
       else
         vol_ico="^i(${bmp_dir}/vol-mute.xbm)"
       fi
-
-      # Send the events
-      echo -e "date\t^bg()^fg(#efefef)$date_ ^fg()"
-      echo -e "wifi\t$ssid $wifi_ico^fg()"
-      echo -e "battery\t^i($bica)$ba%^fg()"
-      echo -e "load\t$mem_ico $perc_mem% ^fg()"
-      echo -e "volume\t$vol_ico $perc_vol ^fg()"
+      echo -e "volume\t$vol_ico $perc_vol"
 
       sleep 1 || break
     done > >(uniq_linebuffered) &
@@ -123,7 +120,7 @@ function showData() {
     echo -n "^bg()^fg() ${windowtitle}"
     echo -n "^pa($(($panel_width/2 - 220)))  "
     printWorkspaces
-    echo -n "  "
+    echo -n "^bg()^fg()  "
     # TODO: give them a separate position
     echo -n "^pa($(($panel_width - 300)))"
     echo -n "$load  $volume  $batt  $wifi  $date"
@@ -200,7 +197,7 @@ kill -9 $(ps ux | grep panel.sh | awk -F\  -v pid=$$ 'pid != $2 {print $2}')
 hc pad $monitor $panel_height
 
 # Let shit hit the fan
-generateData 2> /dev/null | showData 2> /dev/null | dzen2 -w $panel_width \
-  -x $x -y $y -h $panel_height -ta l -fn "$font" \
+generateData 2>/dev/null | showData 2>/dev/null | dzen2 -w $panel_width \
+  -x $x -y $y -h $panel_height -ta l -fn "$font" -bg "$background" -fg "$foreground" \
   -e 'button3=;button4=exec:herbstclient use_index -1;button5=exec:herbstclient use_index +1'
 
