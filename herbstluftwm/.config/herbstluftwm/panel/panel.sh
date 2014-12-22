@@ -25,6 +25,7 @@ wifi_int='wlp2s0'
 panel_dir="$HOME/.config/herbstluftwm/panel"
 bmp_dir="${panel_dir}/bitmaps"
 
+# Checks whether the data has changed so we don't do unnecessary repaints
 function uniq_linebuffered() {
   awk '$0 != l { print ; l=$0 ; fflush(); }' "$@"
 }
