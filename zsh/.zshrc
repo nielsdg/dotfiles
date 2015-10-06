@@ -102,6 +102,10 @@ if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
   zle -N zle-line-init
   zle -N zle-line-finish
 fi
+
+# Set reverse search to Ctrl + R
+bindkey '^R' history-incremental-search-backward
+
 # }}}
 # {{{ Completion
 
