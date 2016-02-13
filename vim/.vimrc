@@ -1,7 +1,7 @@
 " Bundles {{{
 set nocompatible
 filetype off
-set rtp+=~/.vim/bundle/vundle/
+set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#rc()
 
 " Vim Plugin manager
@@ -27,16 +27,18 @@ Bundle 'Valloric/YouCompleteMe'
 " Snippets
 Bundle 'SirVer/ultisnips'
 Bundle 'honza/vim-snippets'
-" Now complete with tab
-Bundle 'ervandew/supertab'
-" LESS Support
-Bundle 'groenewege/vim-less'
 " Syntax error reporting
 Bundle 'scrooloose/syntastic'
 " Tag listing
 Bundle 'majutsushi/tagbar'
 " Multiple cursor selection
 Bundle 'terryma/vim-multiple-cursors'
+" Language support {{{
+" LESS Support
+Bundle 'groenewege/vim-less'
+" Rust
+Bundle 'rust-lang/rust.vim'
+" }}}
 
 filetype plugin indent on
 " }}}
@@ -62,8 +64,6 @@ nnoremap <leader>gP :Git push<CR>
 " Airline
 let g:airline_powerline_fonts = 1
 let g:airline_theme = 'powerlineish'
-let g:airline_enable_branch = 1
-let g:airline_enable_syntastic = 1
 
 " Syntastic
 let g:syntastic_auto_loc_list=1
@@ -85,7 +85,6 @@ set tags+=./.tags
 " make YCM compatible with UltiSnips (using supertab)
 let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
-let g:SuperTabDefaultCompletionType = '<C-n>'
 
 " better key bindings for UltiSnipsExpandTrigger
 let g:UltiSnipsExpandTrigger = "<tab>"
@@ -116,8 +115,23 @@ set foldmethod=syntax
 set mouse=a
 set scrolloff=8 "keep 8 lines below/above cursor
 " }}}
+" UI options {{{
+if has('gui_running')
+  set guifont=Source\Code\Pro\ Regular\ 10
+
+  " Remove scrollbars
+  set guioptions-=L
+  set guioptions-=R
+  set guioptions-=T
+  set guioptions-=B
+
+  " Remove toolbar
+  set guioptions=-t
+endif
+" }}}
 " Colorscheme {{{
 set t_Co=256
+set background=dark
 colorscheme base16-eighties
 syntax enable
 " }}}
@@ -372,6 +386,8 @@ augroup unrelated_au
   au BufRead {.vimrc,vimrc} set foldmethod=marker
 
   au BufRead .zshrc set foldmethod=marker
+
+  au BufRead .tmux.conf set foldmethod=marker
 
 augroup END
 "}}}
