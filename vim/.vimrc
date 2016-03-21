@@ -1,46 +1,58 @@
-" Bundles {{{
 set nocompatible
-filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#rc()
 
-" Vim Plugin manager
-Bundle 'gmarik/vundle'
-" File explorer
-Bundle 'scrooloose/nerdtree'
-" Git
-Bundle 'fugitive.vim'
-Bundle 'airblade/vim-gitgutter'
-" Airline (status bar)
-Bundle 'bling/vim-airline'
-" Ack (grep-like)
-Bundle 'mileszs/ack.vim'
-" Executing commands in vim
-Bundle 'Shougo/vimproc'
-Bundle 'Shougo/vimshell'
-" Easy commenting out
-Bundle 'tpope/vim-commentary'
-" Color schemes
-Bundle 'chriskempson/base16-vim'
-" Autocompletion
-Bundle 'Valloric/YouCompleteMe'
-" Snippets
-Bundle 'SirVer/ultisnips'
-Bundle 'honza/vim-snippets'
-" Syntax error reporting
-Bundle 'scrooloose/syntastic'
-" Tag listing
-Bundle 'majutsushi/tagbar'
-" Multiple cursor selection
-Bundle 'terryma/vim-multiple-cursors'
-" Language support {{{
-" LESS Support
-Bundle 'groenewege/vim-less'
-" Rust
-Bundle 'rust-lang/rust.vim'
+" Plugs {{{
+" Automatic installation {{{
+if empty(glob('~/.vim/autoload/plug.vim'))
+    silent !mkdir -p ~/.vim/autoload
+    silent !curl -fLo ~/.vim/autoload/plug.vim
+          \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    au VimEnter * PlugInstall
+endif
 " }}}
 
-filetype plugin indent on
+call plug#begin('~/.vim/plugged')
+
+" File explorer
+Plug 'scrooloose/nerdtree'
+" Git
+Plug 'fugitive.vim'
+Plug 'airblade/vim-gitgutter'
+" Airline (status bar)
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+" Ack (grep-like)
+Plug 'mileszs/ack.vim'
+" Executing commands in vim
+Plug 'Shougo/vimproc'
+Plug 'Shougo/vimshell'
+" Easy commenting out
+Plug 'tpope/vim-commentary'
+" Color schemes
+Plug 'chriskempson/base16-vim'
+" Autocompletion
+Plug 'Valloric/YouCompleteMe'
+Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
+" Snippets
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+" Syntax error reporting
+Plug 'scrooloose/syntastic'
+" Tag listing
+Plug 'majutsushi/tagbar'
+" Multiple cursor selection
+Plug 'terryma/vim-multiple-cursors'
+" Language support {{{
+Plug 'octol/vim-cpp-enhanced-highlight' " C++
+Plug 'pangloss/vim-javascript'          " Javascript
+Plug 'groenewege/vim-less'              " LESS
+Plug 'rust-lang/rust.vim'               " Rust
+Plug 'neovimhaskell/haskell-vim'        " Haskell
+Plug 'eagletmt/neco-ghc'                " Haskell
+Plug 'artoj/qmake-syntax-vim'           " Qmake
+Plug 'jakub-olczyk/cpp.vim'             " Qt
+" }}}
+call plug#end()
+
 " }}}
 " Leader {{{
 
@@ -91,11 +103,15 @@ let g:UltiSnipsExpandTrigger = "<tab>"
 let g:UltiSnipsJumpForwardTrigger = "<tab>"
 let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
+" Haskell autocompletion
+let g:haskellmode_completion_ghc = 0
+
 " }}}
 " General options {{{
 set number
 set ruler
 syntax on
+filetype plugin indent on
 set autoindent
 set smartindent
 set encoding=utf-8
@@ -131,6 +147,8 @@ endif
 " }}}
 " Colorscheme {{{
 set t_Co=256
+let base16colorspace=256
+
 set background=dark
 colorscheme base16-eighties
 syntax enable
@@ -256,19 +274,12 @@ set foldtext=MyFoldText()
 nnoremap K <nop>
 " }}}
 " Filetype specific {{{
-" Markdown {{{
-
-augroup ft_markdown
+" Config files {{{
+augroup config_files
   au!
-
-  au BufNewFile,BufRead *.m*down setlocal filetype=markdown
-  au BufNewFile,BufRead *.md setlocal filetype=markdown
-  au Filetype markdown call s:setupWrapping()
-
-  " Use <localleader>1/2/3 to add headings.
-  au Filetype markdown nnoremap <buffer> <localleader>1 yypVr=
-  au Filetype markdown nnoremap <buffer> <localleader>2 yypVr-
-  au Filetype markdown nnoremap <buffer> <localleader>3 I### <ESC>
+  au BufRead {.vimrc,vimrc} set foldmethod=marker
+  au BufRead .zshrc set foldmethod=marker
+  au BufRead .tmux.conf set foldmethod=marker
 augroup END
 " }}}
 " C# {{{
@@ -291,11 +302,21 @@ augroup haskell
   au FileType haskell setlocal omnifunc=necoghc#omnifunc
 augroup END
 " }}}
+" HTML {{{
+  au BufRead *.html setlocal ts=2 sw=2 sts=2
+  au BufRead *.html set ft=html
+" }}}
 " Java {{{
-augroup java
+augroup ft_java
   au!
   au Filetype java setlocal ts=4 sw=4 sts=4
   au FileType java let g:syntastic_java_javac_classpath = getcwd() . "/src/"
+augroup END
+" }}}
+" Javascript {{{
+augroup ft_javascript
+  au!
+  au BufNewFile,BufRead *.json set ft=javascript
 augroup END
 " }}}
 " Latex {{{
@@ -305,6 +326,37 @@ augroup ft_latex
   au Filetype tex call s:setupWrapping()
   au Filetype tex setlocal spell
 
+augroup END
+" }}}
+" Markdown {{{
+augroup ft_markdown
+  au!
+
+  au BufNewFile,BufRead *.m*down setlocal filetype=markdown
+  au BufNewFile,BufRead *.md setlocal filetype=markdown
+  au Filetype markdown call s:setupWrapping()
+
+  " Use <localleader>1/2/3 to add headings.
+  au Filetype markdown nnoremap <buffer> <localleader>1 yypVr=
+  au Filetype markdown nnoremap <buffer> <localleader>2 yypVr-
+  au Filetype markdown nnoremap <buffer> <localleader>3 I### <ESC>
+augroup END
+" }}}
+" Nginx {{{
+augroup ft_nginx
+  au!
+
+  au FileType nginx setlocal ts=4 sts=4 sw=4
+
+augroup END
+" }}}
+" Php {{{
+augroup ft_php
+  au!
+  au BufRead *.inc setlocal ts=2 sw=2 sts=2
+  au BufRead *.inc set ft=php
+  au BufRead *.module setlocal ts=2 sw=2 sts=2
+  au BufRead *.module set ft=php
 augroup END
 " }}}
 " Python {{{
@@ -322,25 +374,18 @@ augroup ft_ruby
 
   au FileType ruby call s:setupWrapping()
 
+  " Thorfile, Rakefile, Vagrantfile and Gemfile are Ruby
+  au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru} set ft=ruby
+
 augroup END
 " }}}
-" Nginx {{{
-augroup ft_nginx
+" Qt {{{
+augroup ft_qt
   au!
-
-  au FileType nginx setlocal ts=4 sts=4 sw=4
-
+  au BufRead *.qml set ft=javascript
+  au BufRead *.qrc set ft=xml
+  au BufRead *.qss set ft=css
 augroup END
-" }}}
-" Php {{{
-  au BufRead *.inc setlocal ts=2 sw=2 sts=2
-  au BufRead *.inc set ft=php
-  au BufRead *.module setlocal ts=2 sw=2 sts=2
-  au BufRead *.module set ft=php
-" }}}
-" HTML {{{
-  au BufRead *.html setlocal ts=2 sw=2 sts=2
-  au BufRead *.html set ft=html
 " }}}
 " }}}
 " Mappings {{{
@@ -376,18 +421,6 @@ augroup unrelated_au
 
   " Remove trailing whitespace
   autocmd BufWritePre * :call s:removeTrailingWhitespace()
-
-  " Thorfile, Rakefile, Vagrantfile and Gemfile are Ruby
-  au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru} set ft=ruby
-
-  " json == javascript
-  au BufNewFile,BufRead *.json set ft=javascript
-
-  au BufRead {.vimrc,vimrc} set foldmethod=marker
-
-  au BufRead .zshrc set foldmethod=marker
-
-  au BufRead .tmux.conf set foldmethod=marker
 
 augroup END
 "}}}

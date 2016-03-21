@@ -14,9 +14,15 @@ setopt NOMATCH
 # no Beep on error.
 setopt NO_BEEP
 # }}}
+# {{{ PATH
+PATH=~/.local/bin/:$PATH
+# }}}
 # {{{ Colors
-autoload colors
-colors
+autoload colors && colors
+
+# use base16 colors
+BASE16_SHELL="$HOME/.config/base16-shell/base16-eighties.dark.sh"
+[[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
 
 # give ls solarized colors
 eval $(dircolors ~/.dir_colors/dircolors.256dark)
@@ -37,6 +43,9 @@ man() {
       man "$@"
 }
 
+# fish-like syntax highlighting
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
 # }}}
 # {{{ Prompt
 setopt prompt_subst
@@ -44,11 +53,12 @@ PROMPT='%{$fg[cyan]%}%n@%m %{$fg_no_bold[green]%}${PWD/#$HOME/~}%{$reset_color%}
 # }}}
 # {{{ Aliases
 
-export EDITOR=vim
+export EDITOR=nvim
 export VISUAL="$EDITOR"
 export BROWSER=firefox-beta-bin
 
-alias vi='vim'
+alias vi='nvim'
+alias vim='nvim'
 
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
@@ -116,5 +126,12 @@ compinit
 
 # }}}
 
-if [ "$TMUX" = "" ]; then tmux; fi
+# Start tmux by default, because I forget it otherwise.
+# And then curse myself for not doing so ^^.
+if [ "$TMUX" = "" ]; then
+  if [ "$TERM" = "xterm-256color" ]; then
+    export TERM=xterm-256color
+  fi
+  tmux
+fi
 
