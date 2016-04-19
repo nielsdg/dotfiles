@@ -32,24 +32,22 @@ Plug 'chriskempson/base16-vim'
 " Autocompletion
 Plug 'Valloric/YouCompleteMe'
 Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
-" Snippets
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
 " Syntax error reporting
 Plug 'scrooloose/syntastic'
 " Tag listing
 Plug 'majutsushi/tagbar'
 " Multiple cursor selection
 Plug 'terryma/vim-multiple-cursors'
-" Language support {{{
-Plug 'octol/vim-cpp-enhanced-highlight' " C++
+" Language-specific {{{
+Plug 'octol/vim-cpp-enhanced-highlight',{'for': 'cpp'}
 Plug 'pangloss/vim-javascript'          " Javascript
 Plug 'groenewege/vim-less'              " LESS
 Plug 'rust-lang/rust.vim'               " Rust
-Plug 'neovimhaskell/haskell-vim'        " Haskell
-Plug 'eagletmt/neco-ghc'                " Haskell
+Plug 'neovimhaskell/haskell-vim',       {'for': 'haskell'}
+Plug 'eagletmt/neco-ghc',               {'for': 'haskell'}
 Plug 'artoj/qmake-syntax-vim'           " Qmake
 Plug 'jakub-olczyk/cpp.vim'             " Qt
+Plug 'artur-shaik/vim-javacomplete2',   {'for': 'java'}
 " }}}
 call plug#end()
 
@@ -277,7 +275,7 @@ nnoremap K <nop>
 " Config files {{{
 augroup config_files
   au!
-  au BufRead {.vimrc,vimrc} set foldmethod=marker
+  au BufRead {init.vim,.vimrc,vimrc} set foldmethod=marker
   au BufRead .zshrc set foldmethod=marker
   au BufRead .tmux.conf set foldmethod=marker
 augroup END
@@ -311,6 +309,7 @@ augroup ft_java
   au!
   au Filetype java setlocal ts=4 sw=4 sts=4
   au FileType java let g:syntastic_java_javac_classpath = getcwd() . "/src/"
+  au FileType java setlocal omnifunc=javacomplete#Complete
 augroup END
 " }}}
 " Javascript {{{
