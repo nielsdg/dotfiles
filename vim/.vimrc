@@ -4,8 +4,8 @@ set nocompatible
 " Automatic installation {{{
 if empty(glob('~/.vim/autoload/plug.vim'))
     silent !mkdir -p ~/.vim/autoload
-    silent !curl -fLo ~/.vim/autoload/plug.vim
-          \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    silent !curl -fLo ~/.vim/autoload/plug.vim \
+         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     au VimEnter * PlugInstall
 endif
 " }}}
@@ -14,6 +14,7 @@ call plug#begin('~/.vim/plugged')
 
 " File explorer
 Plug 'scrooloose/nerdtree'
+Plug 'ctrlpvim/ctrlp.vim'
 " Git
 Plug 'fugitive.vim'
 Plug 'airblade/vim-gitgutter'
@@ -33,21 +34,28 @@ Plug 'chriskempson/base16-vim'
 Plug 'Valloric/YouCompleteMe'
 Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
 " Syntax error reporting
-Plug 'scrooloose/syntastic'
+" Plug 'scrooloose/syntastic'
+Plug 'benekastah/neomake'
 " Tag listing
 Plug 'majutsushi/tagbar'
 " Multiple cursor selection
 Plug 'terryma/vim-multiple-cursors'
 " Language-specific {{{
+" TODO: maybe look into vim-polyglot
 Plug 'octol/vim-cpp-enhanced-highlight',{'for': 'cpp'}
 Plug 'pangloss/vim-javascript'          " Javascript
 Plug 'groenewege/vim-less'              " LESS
+Plug 'dsawardekar/ember.vim'            " Ember.js
+Plug 'mustache/vim-mustache-handlebars' " Handlebars
+Plug 'kchmck/vim-coffee-script'         " Coffeescript
 Plug 'rust-lang/rust.vim'               " Rust
 Plug 'neovimhaskell/haskell-vim',       {'for': 'haskell'}
 Plug 'eagletmt/neco-ghc',               {'for': 'haskell'}
 Plug 'artoj/qmake-syntax-vim'           " Qmake
 Plug 'jakub-olczyk/cpp.vim'             " Qt
 Plug 'artur-shaik/vim-javacomplete2',   {'for': 'java'}
+Plug 'tkztmk/vim-vala',                 {'for': 'vala'}
+Plug 'othree/xml.vim',                  {'for': 'xml'}
 " }}}
 call plug#end()
 
@@ -76,10 +84,10 @@ let g:airline_powerline_fonts = 1
 let g:airline_theme = 'powerlineish'
 
 " Syntastic
-let g:syntastic_auto_loc_list=1
-let g:syntastic_check_on_open=1
-let g:syntastic_cpp_check_header = 1
-let g:syntastic_java_javac_classpath = "./lib/*.jar\n./src/"
+" let g:syntastic_auto_loc_list=1
+" let g:syntastic_check_on_open=1
+" let g:syntastic_cpp_check_header = 1
+" let g:syntastic_java_javac_classpath = "./lib/*.jar\n./src/"
 
 " Tagbar
 nnoremap <leader>l :TagbarToggle<CR>
@@ -103,6 +111,9 @@ let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
 " Haskell autocompletion
 let g:haskellmode_completion_ghc = 0
+
+" C++ enhanced highlighting
+let g:cpp_class_scope_highlight = 1
 
 " }}}
 " General options {{{
@@ -371,8 +382,6 @@ augroup END
 augroup ft_ruby
   au!
 
-  au FileType ruby call s:setupWrapping()
-
   " Thorfile, Rakefile, Vagrantfile and Gemfile are Ruby
   au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru} set ft=ruby
 
@@ -419,7 +428,7 @@ augroup unrelated_au
   endfunction
 
   " Remove trailing whitespace
-  autocmd BufWritePre * :call s:removeTrailingWhitespace()
+  " autocmd BufWritePre * :call s:removeTrailingWhitespace()
 
 augroup END
 "}}}
