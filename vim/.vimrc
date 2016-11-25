@@ -61,6 +61,11 @@ let maplocalleader=','
 nnoremap <leader><leader> :NERDTreeToggle<esc>
 let NERDTreeIgnore = ['\.pyc$', '\.hi', '\.o']
 
+" CtrlP
+if executable('ag')
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+end
+
 " Git
 nnoremap <leader>gs :Gstatus<CR>
 nnoremap <leader>gd :Gdiff<CR>
