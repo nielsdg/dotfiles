@@ -83,7 +83,15 @@ let g:airline_theme = 'powerlineish'
 " let g:syntastic_cpp_check_header = 1
 " let g:syntastic_java_javac_classpath = "./lib/*.jar\n./src/"
 
-" Tagbar
+" Neomake
+autocmd! BufWritePost * Neomake
+let g:neomake_javascript_jshint_maker = {
+  \ 'args': ['--verbose'],
+  \ 'errorformat': '%A%f: line %l\, col %v\, %m \(%t%*\d\)',
+  \ }
+let g:neomake_javascript_enabled_makers = ['jshint']
+
+" Tagbar {{{
 nnoremap <leader>l :TagbarToggle<CR>
 
 let g:tagbar_type_rust = {
@@ -123,6 +131,9 @@ let g:haskellmode_completion_ghc = 0
 
 " C++ enhanced highlighting
 let g:cpp_class_scope_highlight = 1
+
+" Handlebars mustache autocompletion
+let g:mustache_abbreviations = 1
 
 " }}}
 " General options {{{
@@ -404,6 +415,12 @@ augroup ft_qt
   au BufRead *.qss set ft=css
 augroup END
 " }}}
+" Vala {{{
+augroup ft_vala
+  au!
+  au BufRead *.vala setlocal ts=4 sw=4 sts=4
+augroup END
+" }}}
 " }}}
 " Mappings {{{
 nnoremap <silent> <C-l> :noh<CR><C-L>
@@ -417,9 +434,6 @@ nnoremap _md :set ft=markdown<CR>
 
 " open shell
 nnoremap <leader>sh :VimShellPop<CR>
-
-" Allow copy-pasting to X11 in visual mode
-vnoremap <C-c> "+y
 " }}}
 " Tab completion for commands {{{
 set wildmode=list:longest,list:full
