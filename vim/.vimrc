@@ -38,23 +38,12 @@ Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
 Plug 'benekastah/neomake'
 " Tag listing
 Plug 'majutsushi/tagbar'
-" Multiple cursor selection
-Plug 'terryma/vim-multiple-cursors'
 " Language-specific {{{
-" TODO: maybe look into vim-polyglot
-Plug 'octol/vim-cpp-enhanced-highlight',{'for': 'cpp'}
-Plug 'pangloss/vim-javascript'          " Javascript
-Plug 'groenewege/vim-less'              " LESS
-Plug 'dsawardekar/ember.vim'            " Ember.js
-Plug 'mustache/vim-mustache-handlebars' " Handlebars
-Plug 'kchmck/vim-coffee-script'         " Coffeescript
-Plug 'rust-lang/rust.vim'               " Rust
-Plug 'neovimhaskell/haskell-vim',       {'for': 'haskell'}
+Plug 'sheerun/vim-polyglot'
 Plug 'eagletmt/neco-ghc',               {'for': 'haskell'}
 Plug 'artoj/qmake-syntax-vim'           " Qmake
 Plug 'jakub-olczyk/cpp.vim'             " Qt
 Plug 'artur-shaik/vim-javacomplete2',   {'for': 'java'}
-Plug 'tkztmk/vim-vala',                 {'for': 'vala'}
 Plug 'othree/xml.vim',                  {'for': 'xml'}
 " }}}
 call plug#end()
