@@ -1,16 +1,24 @@
 [user]
-	name = Niels De Graef
-	email = nielsdegraef@gmail.com
+    name = Niels De Graef
+    email = nielsdegraef@gmail.com
+    signingkey = 7671699EA4011D70
 [color]
-	ui = true
+    ui = true
 [core]
-	editor = vim
+    editor = nvim
+    excludesfile = /home/niels/.gitignore
 [push]
-	default = current
+    default = current
 [help]
-	autocorrect = 1
+    autocorrect = 1
 [advice]
-  statusHints = false
+    statusHints = false
 [github]
-  user = nielsdg
-
+    user = nielsdg
+[alias]
+    branches = branch -a
+    tags = tag
+    stashes = stash list
+    uncommit = reset --mixed HEAD~
+    fuckit = !git reset --hard HEAD && git clean -d -f
+    stash-unapply = !git stash show -p | git apply -R
