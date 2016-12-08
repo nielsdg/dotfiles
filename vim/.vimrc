@@ -28,6 +28,8 @@ Plug 'Shougo/vimproc'
 Plug 'Shougo/vimshell'
 " Easy commenting out
 Plug 'tpope/vim-commentary'
+" Better search and replace
+Plug 'tpope/vim-abolish'
 " Color schemes
 Plug 'chriskempson/base16-vim'
 " Autocompletion
