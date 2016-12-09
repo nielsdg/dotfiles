@@ -42,6 +42,7 @@ Plug 'benekastah/neomake'
 Plug 'majutsushi/tagbar'
 " Language-specific {{{
 Plug 'sheerun/vim-polyglot'
+Plug 'arrufat/vala.vim'                 " Vala
 Plug 'eagletmt/neco-ghc',               {'for': 'haskell'}
 Plug 'artoj/qmake-syntax-vim'           " Qmake
 Plug 'jakub-olczyk/cpp.vim'             " Qt
@@ -136,6 +137,9 @@ let g:cpp_class_scope_highlight = 1
 
 " Handlebars mustache autocompletion
 let g:mustache_abbreviations = 1
+
+" Polyglot
+let g:polyglot_disabled = ['vala']
 
 " }}}
 " General options {{{
