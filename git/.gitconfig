@@ -7,6 +7,8 @@
 [core]
     editor = nvim
     excludesfile = /home/niels/.gitignore
+[commit]
+    gpgsign = true
 [push]
     default = current
 [help]
