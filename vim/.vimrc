@@ -16,7 +16,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'scrooloose/nerdtree'
 Plug 'ctrlpvim/ctrlp.vim'
 " Git
-Plug 'fugitive.vim'
+Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 " Airline (status bar)
 Plug 'vim-airline/vim-airline'
