@@ -378,6 +378,14 @@ augroup ft_markdown
   au Filetype markdown nnoremap <buffer> <localleader>3 I### <ESC>
 augroup END
 " }}}
+" Meson {{{
+augroup ft_meson
+  au!
+
+  au BufNewFile,BufRead meson_options.txt setlocal filetype=meson
+  au BufNewFile,BufRead meson.build setlocal filetype=meson
+augroup END
+" }}}
 " Nginx {{{
 augroup ft_nginx
   au!
