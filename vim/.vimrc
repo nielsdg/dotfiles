@@ -86,13 +86,19 @@ let g:airline_theme = 'powerlineish'
 " let g:syntastic_cpp_check_header = 1
 " let g:syntastic_java_javac_classpath = "./lib/*.jar\n./src/"
 
-" Neomake
+" Neomake {{{
 autocmd! BufWritePost * Neomake
 let g:neomake_javascript_jshint_maker = {
   \ 'args': ['--verbose'],
   \ 'errorformat': '%A%f: line %l\, col %v\, %m \(%t%*\d\)',
   \ }
 let g:neomake_javascript_enabled_makers = ['jshint']
+
+" let g:neomake_rust_rustc_exe = 'cargo check'
+" let g:neomake_rust_rustc_fname = ''
+" let g:neomake_rust_rustc_args = '--'
+" let g:neomake_rust_checkers = ['rustc']
+" }}}
 
 " Tagbar {{{
 nnoremap <leader>l :TagbarToggle<CR>
