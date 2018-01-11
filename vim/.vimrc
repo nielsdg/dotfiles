@@ -363,6 +363,9 @@ augroup END
 augroup ft_latex
   au!
 
+  " For some reason, vim detects tex files as plaintex :/
+  au BufNewFile,BufRead *.tex setlocal filetype=tex
+
   au Filetype tex call s:setupWrapping()
   au Filetype tex setlocal spell
 
