@@ -24,3 +24,4 @@
     uncommit = reset --mixed HEAD~
     fuckit = !git reset --hard HEAD && git clean -d -f
     stash-unapply = !git stash show -p | git apply -R
+    wip = !git add -A && git commit -m 'WIP'
