@@ -442,6 +442,14 @@ augroup ft_vala
   au BufRead *.vala setlocal ts=4 sw=4 sts=4
 augroup END
 " }}}
+" XML {{{
+augroup ft_xml
+  au!
+  au FileType xml let g:xml_syntax_folding=1
+  au FileType xml setlocal foldmethod=syntax
+  au FileType xml :syntax on
+augroup END
+" }}}
 " }}}
 " Mappings {{{
 nnoremap <silent> <C-l> :noh<CR><C-L>
