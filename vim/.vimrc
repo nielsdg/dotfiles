@@ -207,9 +207,7 @@ function! s:setupWrapping()
   setlocal wrap
   setlocal wrapmargin=2
   setlocal textwidth=80
-  if v:version > 703
-    setlocal colorcolumn=+1
-  endif
+  setlocal colorcolumn=+1
 endfunction
 
 " }}}
