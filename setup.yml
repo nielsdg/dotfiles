@@ -1,0 +1,56 @@
+#!/usr/bin/ansible-playbook -K
+---
+- hosts: localhost
+  gather_facts: no
+  vars:
+    dnf_pkgs_base:
+      - htop
+      - jq
+      - neovim
+      - python3
+      - ripgrep
+      - tmux
+      - zsh
+      - zsh-syntax-highlighting
+    dnf_pkgs_devel:
+      - devhelp
+      - gcc
+      - git
+      - gobject-introspection-devel
+      - graphviz
+      - glib2-doc
+      - gtk4-devel
+      - gtk4-devel-docs
+      - libadwaita-devel
+      - meson
+      - ninja-build
+      - python3-gobject
+      - python3-pip
+      - python3-wheel
+      - vala
+      - valadoc
+    dnf_pkgs_rh:
+      - fedpkg
+    flatpaks:
+      - com.spotify.Client
+      - org.gnome.Calculator
+      - org.gnome.Maps
+      - org.gnome.TextEditor
+      - org.gnome.dspy
+
+  tasks:
+    - name: Install base packages
+      become: yes
+      dnf:
+        state: latest
+        name: "{{ dnf_pkgs_base }}"
+    - name: Install devel packages
+      become: yes
+      dnf:
+        state: latest
+        name: "{{ dnf_pkgs_devel }}"
+    # ansible-galaxy collection install community.genera
+    - name: Install flatpaks
+      community.general.flatpak:
+        name: "{{ flatpaks }}"
+        state: present
