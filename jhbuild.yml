@@ -1,0 +1,59 @@
+#!/usr/bin/ansible-playbook -K
+---
+- hosts: localhost
+  gather_facts: no
+  vars:
+    checkout_dir: "{{ lookup('env', 'HOME') }}/jhbuild/checkout"
+    jhbuild_dir: "{{ checkout_dir }}/jhbuild"
+    dnf_pkgs_base:
+      - jq
+      - neovim
+      - python3
+      - redhat-rpm-config
+      - ripgrep
+      - tmux
+      - zsh
+      - zsh-syntax-highlighting
+    # For certain things, it's just easier to have them available already
+    dnf_pkgs_devel:
+      - gettext-devel
+      - make
+      - meson
+      - yelp-tools
+
+  tasks:
+    - name: Install base packages
+      become: yes
+      dnf:
+        state: latest
+        name: "{{ dnf_pkgs_base }}"
+    - name: Install devel packages
+      become: yes
+      dnf:
+        state: latest
+        name: "{{ dnf_pkgs_devel }}"
+    - name: Setup jhbuild
+      block:
+        - name: Clone jhbuild
+          ansible.builtin.git:
+            repo: "https://gitlab.gnome.org/GNOME/jhbuild.git"
+            dest: "{{ jhbuild_dir }}"
+        - name: Configure jhbuild
+          # Just install into /usr since we're in a container anyway
+          ansible.builtin.command: ./autogen.sh --simple-install --prefix=/usr
+          args:
+            chdir: "{{ jhbuild_dir }}"
+        - name: Make jhbuild
+          ansible.builtin.command: make
+          args:
+            chdir: "{{ jhbuild_dir }}"
+        - name: Install jhbuild
+          become: yes
+          ansible.builtin.shell:
+          args:
+            # In a default Fedora setup, a restrictive umask is used when not
+            # running under a login shell. We don't want the installed jhbuild
+            # to be only usable as root, so make sure the files are
+            # world-readable.
+            cmd: "umask 002; make install"
+            chdir: "{{ jhbuild_dir }}"

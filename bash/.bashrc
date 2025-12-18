@@ -14,7 +14,6 @@ PS1='[\u@\h \W]\$ '
 #-------------------------------------------------------------
 # Defaults
 #-------------------------------------------------------------
-export PATH="$PATH:/opt/lampp/bin/"
 export BROWSER="firefox-beta-bin"
 export EDITOR="vim"
 export VISUAL="vim"
@@ -22,7 +21,8 @@ export VISUAL="vim"
 #-------------------------------------------------------------
 # Aliases
 #-------------------------------------------------------------
-alias vi='vim'
+alias vi='nvim'
+alias vim='nvim'
 # replace error-prone commands
 alias rm='rm -i'
 alias cp='cp -i'
