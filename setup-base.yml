@@ -5,6 +5,7 @@
   vars:
     # Set this to yes if you want to overwrite any local dot configs
     force_overwrite: no
+    # The base packages that should be installed
     dnf_pkgs_base:
       - htop
       - jq
@@ -14,6 +15,8 @@
       - tmux
       - zsh
       - zsh-syntax-highlighting
+    # The neovim config path (FIXME: I'd like to use $XDG_CONFIG, but not sure how)
+    nvim_config_path: ~/.config/nvim/init.vim
 
   tasks:
     - name: Install base packages
@@ -31,8 +34,13 @@
         src: tmux/.tmux.conf
         dest: ~/.tmux.conf
         force: "{{ force_overwrite }}"
+    - name: Configure neovim (make sure its config exists)
+      file:
+        dest: "{{ nvim_config_path | dirname }}"
+        state: directory
+        recurse: yes
     - name: Configure neovim
       copy:
         src: vim/init.vim
-        dest: ~/.config/nvim/init.vim
+        dest: "{{ nvim_config_path }}"
         force: "{{ force_overwrite }}"
