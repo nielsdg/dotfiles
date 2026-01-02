@@ -288,8 +288,8 @@ xnoremap <silent> <A-Up> :<C-u>call MoveVisualUp()<CR>
 xnoremap <silent> <A-Down> :<C-u>call MoveVisualDown()<CR>
 " }}}
 " Backups and undo {{{
-set backupdir=~/.vim/tmp/backup/ " backups
-set directory=~/.vim/tmp/swap/   " swap files
+set backupdir=~/.cache/nvim/backup/ " backups
+set directory=~/.cache/nvim/swap/   " swap files
 set backup                       " enable backups
 set backupskip=/tmp/*,/private/tmp/*"
 " }}}
