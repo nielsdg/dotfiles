@@ -49,7 +49,11 @@ source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # }}}
 # {{{ Prompt
 setopt prompt_subst
-PROMPT='%{$fg[cyan]%}%n@%m %{$fg_no_bold[green]%}${PWD/#$HOME/~}%{$reset_color%} %(?.✔.✗) '
+if [ -z "$TOOLBOX_PATH" ]; then
+  PROMPT='%{$fg[cyan]%}%n@%m %{$fg_no_bold[green]%}${PWD/#$HOME/~}%{$reset_color%} %(?.✔.✗) '
+else
+  PROMPT='%{$fg[magenta]%}%n@%m %{$fg_no_bold[green]%}${PWD/#$HOME/~}%{$reset_color%} %(?.✔.✗) '
+fi
 # }}}
 # {{{ Aliases
 
@@ -126,12 +130,14 @@ compinit
 
 # }}}
 
-# Start tmux by default, because I forget it otherwise.
-# And then curse myself for not doing so ^^.
-if [ "$TMUX" = "" ]; then
-  if [ "$TERM" = "xterm-256color" ]; then
-    export TERM=xterm-256color
+if [ -n "$TOOLBOX_PATH" ]; then
+  # Start tmux by default, because I forget it otherwise.
+  # And then curse myself for not doing so ^^.
+  if [ "$TMUX" = "" ]; then
+    # if [ "$TERM" = "xterm-256color" ]; then
+    #   export TERM=xterm-256color
+    # fi
+    # tmux
   fi
-  tmux
 fi
 
