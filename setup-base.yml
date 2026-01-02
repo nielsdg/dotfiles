@@ -1,0 +1,38 @@
+#!/usr/bin/ansible-playbook -K
+---
+- hosts: localhost
+  gather_facts: no
+  vars:
+    # Set this to yes if you want to overwrite any local dot configs
+    force_overwrite: no
+    dnf_pkgs_base:
+      - htop
+      - jq
+      - neovim
+      - python3
+      - ripgrep
+      - tmux
+      - zsh
+      - zsh-syntax-highlighting
+
+  tasks:
+    - name: Install base packages
+      become: yes
+      dnf:
+        state: present
+        name: "{{ dnf_pkgs_base }}"
+    - name: Configure zsh
+      copy:
+        src: zsh/.zshrc
+        dest: ~/.zshrc
+        force: "{{ force_overwrite }}"
+    - name: Configure tmux
+      copy:
+        src: tmux/.tmux.conf
+        dest: ~/.tmux.conf
+        force: "{{ force_overwrite }}"
+    - name: Configure neovim
+      copy:
+        src: vim/init.vim
+        dest: ~/.config/nvim/init.vim
+        force: "{{ force_overwrite }}"

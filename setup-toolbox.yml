@@ -3,15 +3,6 @@
 - hosts: localhost
   gather_facts: no
   vars:
-    dnf_pkgs_base:
-      - htop
-      - jq
-      - neovim
-      - python3
-      - ripgrep
-      - tmux
-      - zsh
-      - zsh-syntax-highlighting
     dnf_pkgs_devel:
       - devhelp
       - gcc
@@ -39,11 +30,6 @@
       - org.gnome.dspy
 
   tasks:
-    - name: Install base packages
-      become: yes
-      dnf:
-        state: latest
-        name: "{{ dnf_pkgs_base }}"
     - name: Install devel packages
       become: yes
       dnf:
