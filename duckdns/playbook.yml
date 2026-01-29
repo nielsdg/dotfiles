@@ -1,0 +1,36 @@
+#!/usr/bin/ansible-playbook -K
+---
+- hosts: rpi
+  gather_facts: no
+  vars:
+    nvim_config_path: ~/.config/nvim/init.vim
+  become: true
+
+  tasks:
+    - name: Create /etc/duckdns.d/
+      file:
+        dest: /etc/duckdns.d
+        state: directory
+        recurse: yes
+    - name: Install nielsdg.cfg
+      copy:
+        src: nielsdg.cfg
+        dest: /etc/duckdns.d/nielsdg.cfg
+    - name: Install duckdns.sh
+      copy:
+        src: duckdns.sh
+        dest: /usr/bin/duckdns
+        mode: "755"
+    - name: Install duckdns.service
+      copy:
+        src: duckdns.service
+        dest: /usr/lib/systemd/system/duckdns.service
+    - name: Install duckdns.timer
+      copy:
+        src: duckdns.timer
+        dest: /usr/lib/systemd/system/duckdns.timer
+    - name: Enable duckdns timer
+      service:
+        name: duckdns.timer
+        state: started
+        enabled: yes
