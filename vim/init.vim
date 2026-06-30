@@ -2,9 +2,9 @@ set nocompatible
 
 " Plugs {{{
 " Automatic installation {{{
-if empty(glob('~/.vim/autoload/plug.vim'))
-    silent !mkdir -p ~/.vim/autoload
-    silent !curl -fLo ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
+    silent !mkdir -p ~/.local/share/nvim/site/autoload
+    silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     au VimEnter * PlugInstall
 endif
 " }}}
