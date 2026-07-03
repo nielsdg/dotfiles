@@ -1,0 +1,89 @@
+#!/usr/bin/ansible-playbook -K
+
+- hosts: localhost
+  vars:
+    ptyxis: "app.devsuite.Ptyxis" # or just "ptyxis" directly if you don't use flatpak
+
+  tasks:
+
+    - name: install playbook requirements
+      become: true
+      package:
+        name:
+          - python3-psutil
+          - dconf
+          # - dbus-tools
+          # - dbus-daemon
+
+    ######################
+    # keyboard shortcuts #
+    ######################
+
+    # Launchers
+
+    - name: file browser shortcut
+      dconf:
+        key: "/org/gnome/settings-daemon/plugins/media-keys/home"
+        value: "['<Super>e']"
+
+    # Custom keyboard shortcuts
+
+    - name: terminal shortcut name
+      dconf:
+        key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/name"
+        value: "'Launch Terminal'"
+    - name: terminal shortcut command
+      dconf:
+        key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/command"
+        value: "'{{ ptyxis }} -s'"
+    - name: terminal shortcut binding
+      dconf:
+        key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/binding"
+        value: "'<Control><Alt>t'"
+
+    # All of your custom shortcuts must also be added to an array.
+
+    - name: enable custom keybindings
+      dconf:
+        key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings"
+        value: "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
+
+
+    #########
+    # power #
+    #########
+
+    - name: show battery percentage
+      dconf:
+        key: "/org/gnome/desktop/interface/show-battery-percentage"
+        value: "true"
+
+
+    #################
+    # date and time #
+    #################
+
+    - name: automatic timezone
+      dconf:
+        key: "/org/gnome/desktop/datetime/automatic-timezone"
+        value: "true"
+
+    - name: clock show date
+      dconf:
+        key: "/org/gnome/desktop/interface/clock-show-date"
+        value: "true"
+
+    - name: clock format
+      dconf:
+        key: "/org/gnome/desktop/interface/clock-format"
+        value: "'12h'"
+
+    ############
+    # behavior #
+    ############
+
+    - name: numlock on
+      dconf:
+        key: "/org/gnome/desktop/peripherals/keyboard/numlock-state"
+        value: "true"
+
