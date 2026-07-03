@@ -44,3 +44,8 @@
         src: vim/init.vim
         dest: "{{ nvim_config_path }}"
         force: "{{ force_overwrite }}"
+    - name: Configure git
+      copy:
+        src: git/.gitconfig
+        dest: ~/.gitconfig
+        force: "{{ force_overwrite }}"

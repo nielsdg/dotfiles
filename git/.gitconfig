@@ -1,14 +1,10 @@
 [user]
     name = Niels De Graef
     email = nielsdegraef@gmail.com
-    signingkey = 7671699EA4011D70
 [color]
     ui = true
 [core]
     editor = nvim
-    excludesfile = /home/niels/.gitignore
-[commit]
-    gpgsign = true
 [push]
     default = current
 [help]
