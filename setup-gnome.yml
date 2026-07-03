@@ -87,3 +87,20 @@
         key: "/org/gnome/desktop/peripherals/keyboard/numlock-state"
         value: "true"
 
+
+    - name: disable default alt-tab behavior
+      dconf:
+        key: "/org/gnome/desktop/wm/keybindings/switch-applications"
+        value: "['<Super>Tab']"
+    - name: disable default alt-tab behavior (backward)
+      dconf:
+        key: "/org/gnome/desktop/wm/keybindings/switch-applications-backward"
+        value: "['<Shift><Super>Tab']"
+    - name: enable preferred alt-tab behavior
+      dconf:
+        key: "/org/gnome/desktop/wm/keybindings/switch-windows"
+        value: "['<Alt>Tab']"
+    - name: enable preferred alt-tab behavior (backward)
+      dconf:
+        key: "/org/gnome/desktop/wm/keybindings/switch-windows-backward"
+        value: "['<Shift><Alt>Tab']"
