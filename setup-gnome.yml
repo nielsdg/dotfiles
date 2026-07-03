@@ -12,8 +12,8 @@
         name:
           - python3-psutil
           - dconf
-          # - dbus-tools
-          # - dbus-daemon
+          - dbus-tools
+          - dbus-broker
 
     ######################
     # keyboard shortcuts #
