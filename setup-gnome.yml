@@ -2,7 +2,7 @@
 
 - hosts: localhost
   vars:
-    ptyxis: "app.devsuite.Ptyxis" # or just "ptyxis" directly if you don't use flatpak
+    ptyxis: "flatpak run app.devsuite.Ptyxis" # or just "ptyxis" directly if you don't use flatpak
 
   tasks:
 
