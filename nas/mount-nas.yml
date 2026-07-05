@@ -1,0 +1,22 @@
+#!/usr/bin/ansible-playbook -K
+---
+- hosts: rpi
+  gather_facts: no
+  vars:
+    nas_degraef_ip: '{{ hostvars["nas-degraef"].ansible_host }}'
+  become: true
+
+  vars_prompt:
+    - name: nas_password
+      prompt: Enter password for nielsdg on nas-degraef
+      unsafe: true
+      private: true
+
+  tasks:
+    - name: Mount network share
+      mount:
+        src: '//{{ nas_degraef_ip }}/shared'
+        path: /mnt/nas-degraef
+        fstype: cifs
+        opts: 'username=nielsdg,password={{ nas_password }},dom=SAMBA'
+        state: mounted

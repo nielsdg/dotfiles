@@ -1,0 +1,11 @@
+#!/usr/bin/ansible-playbook -K
+---
+- hosts: rpi
+  gather_facts: no
+  become: true
+
+  tasks:
+    - name: Unount network share
+      mount:
+        path: /mnt/nas-degraef
+        state: absent
