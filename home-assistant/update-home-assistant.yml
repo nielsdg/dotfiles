@@ -1,0 +1,18 @@
+#!/usr/bin/ansible-playbook -K
+---
+- hosts: rpi
+  gather_facts: no
+  vars:
+    # this shold point to where the home-assistants docker-compose.yml file is stored
+    docker_compose_dir: services/home-assistant
+  become: true
+
+  tasks:
+    - name: Pull new home-assistant image
+      become: yes
+      community.docker.docker_compose_v2_pull:
+        project_src: "{{ docker_compose_dir }}"
+
+    - name: Run `docker compose up` again
+      community.docker.docker_compose_v2:
+        project_src: "{{ docker_compose_dir }}"
