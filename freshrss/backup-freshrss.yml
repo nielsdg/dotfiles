@@ -1,0 +1,48 @@
+#!/usr/bin/ansible-playbook -K
+---
+- hosts: rpi
+  gather_facts: yes
+  vars:
+    docker_compose_dir: services/freshrss
+    backup_dir: /var/backups/freshrss
+    backup_filename: "freshrss-backup-{{ ansible_date_time.date }}-{{ ansible_date_time.hour }}{{ ansible_date_time.minute }}.tar.gz"
+  become: true
+
+  tasks:
+    - name: Create backup directory
+      file:
+        path: "{{ backup_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Stop FreshRSS container for consistent backup
+      community.docker.docker_compose_v2:
+        project_src: "{{ docker_compose_dir }}"
+        state: stopped
+
+    - name: Get freshrss_data volume path
+      shell: docker volume inspect freshrss_freshrss_data --format '{{"{{ .Mountpoint }}"}}'
+      register: data_volume_path
+      changed_when: false
+
+    - name: Get freshrss_extensions volume path
+      shell: docker volume inspect freshrss_freshrss_extensions --format '{{"{{ .Mountpoint }}"}}'
+      register: extensions_volume_path
+      changed_when: false
+
+    - name: Create backup archive
+      archive:
+        path:
+          - "{{ data_volume_path.stdout }}"
+          - "{{ extensions_volume_path.stdout }}"
+        dest: "{{ backup_dir }}/{{ backup_filename }}"
+        format: gz
+
+    - name: Start FreshRSS container again
+      community.docker.docker_compose_v2:
+        project_src: "{{ docker_compose_dir }}"
+        state: present
+
+    - name: Display backup location
+      debug:
+        msg: "Backup created at {{ backup_dir }}/{{ backup_filename }}"

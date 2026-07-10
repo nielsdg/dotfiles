@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  freshrss:
+    image: freshrss/freshrss:latest
+    container_name: freshrss
+    restart: unless-stopped
+    ports:
+      - "9090:80"
+    environment:
+      - TZ=Europe/Brussels
+      - CRON_MIN=1,31
+    volumes:
+      - freshrss_data:/var/www/FreshRSS/data
+      - freshrss_extensions:/var/www/FreshRSS/extensions
+    networks:
+      - caddy
+
+volumes:
+  freshrss_data:
+  freshrss_extensions:
