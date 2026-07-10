@@ -12,7 +12,7 @@ for file in /etc/duckdns.d/*.cfg; do
 	OUTPUT=$(curl -k -s "https://www.duckdns.org/update?domains=${duckdns_hostname}&token=${duckdns_token}&ip=")
 	logger -t "$LOG_TAG" "${OUTPUT}"
 	if [ "${OUTPUT}" == "KO" ]; then
-		logger -t "$LOG_TAG" "You should check if your domain/token is correct because the server responded negatively!"
+		logger -t "$LOG_TAG" -p user.warning "You should check if your domain/token is correct because the server responded negatively!"
 		EXITCODE=1
 	fi
 done
