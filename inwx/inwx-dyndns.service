@@ -1,0 +1,6 @@
+[Unit]
+Description=INWX DynDNS update job
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/inwx-dyndns

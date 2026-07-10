@@ -1,0 +1,25 @@
+#!/usr/bin/ansible-playbook -K
+---
+- hosts: rpi
+  gather_facts: no
+  become: true
+
+  tasks:
+    - name: Install inwx-dyndns.sh
+      copy:
+        src: inwx-dyndns.sh
+        dest: /usr/bin/inwx-dyndns
+        mode: "755"
+    - name: Install inwx-dyndns.service
+      copy:
+        src: inwx-dyndns.service
+        dest: /usr/lib/systemd/system/inwx-dyndns.service
+    - name: Install inwx-dyndns.timer
+      copy:
+        src: inwx-dyndns.timer
+        dest: /usr/lib/systemd/system/inwx-dyndns.timer
+    - name: Enable inwx-dyndns timer
+      service:
+        name: inwx-dyndns.timer
+        state: started
+        enabled: yes
