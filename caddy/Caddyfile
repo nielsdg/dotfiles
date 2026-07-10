@@ -1,0 +1,9 @@
+# FreshRSS
+freshrss.nielsdg.be {
+    reverse_proxy host.docker.internal:9090
+}
+
+# Home Assistant
+ha.nielsdg.be {
+    reverse_proxy host.docker.internal:8123
+}

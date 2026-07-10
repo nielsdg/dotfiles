@@ -1,0 +1,22 @@
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+
+http:
+  # For extra security set this to only accept connections on localhost if Caddy is on the same machine
+  # server_host: 127.0.0.1
+  # base_url: https://example.com
+  use_x_forwarded_for: true
+  # You must set the trusted proxy IP address so that Home Assistant will properly accept connections
+  # Set this to your Caddy machine IP, or localhost if hosted on the same machine.
+  trusted_proxies:
+    - 172.16.0.0/12    # Covers all Docker bridge networks (172.16-172.31)

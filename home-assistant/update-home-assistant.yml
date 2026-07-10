@@ -8,6 +8,14 @@
   become: true
 
   tasks:
+    - name: Copy configuration.yaml to rpi
+      copy:
+        src: configuration.yaml
+        dest: /home/niels/ha-config/configuration.yaml
+        owner: niels
+        group: niels
+        mode: '0644'
+
     - name: Pull new home-assistant image
       become: yes
       community.docker.docker_compose_v2_pull:

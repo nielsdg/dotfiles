@@ -1,0 +1,28 @@
+#!/usr/bin/ansible-playbook -K
+---
+- hosts: rpi
+  vars:
+    caddy_dir: "{{ ansible_env.HOME }}/caddy"
+
+  tasks:
+    - name: Create Caddy directory
+      file:
+        path: "{{ caddy_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Copy Caddy docker-compose
+      copy:
+        src: docker-compose.yml
+        dest: "{{ caddy_dir }}/docker-compose.yml"
+
+    - name: Copy Caddyfile
+      copy:
+        src: Caddyfile
+        dest: "{{ caddy_dir }}/Caddyfile"
+
+    - name: Start Caddy
+      become: true
+      community.docker.docker_compose_v2:
+        project_src: "{{ caddy_dir }}"
+        state: present

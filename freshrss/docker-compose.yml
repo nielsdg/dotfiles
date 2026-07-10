@@ -19,3 +19,8 @@ services:
 volumes:
   freshrss_data:
   freshrss_extensions:
+
+networks:
+  caddy:
+    external: true
+    name: caddy_default
