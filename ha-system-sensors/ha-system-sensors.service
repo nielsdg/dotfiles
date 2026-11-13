@@ -3,5 +3,5 @@ Description=Publish system sensors to Home Assistant
 
 [Service]
 Type=oneshot
-User=niels
+User=nielsdg
 ExecStart=/usr/bin/ha-system-sensors publish --device gpu-dev
