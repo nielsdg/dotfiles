@@ -230,6 +230,31 @@ class HomeAssistant:
                 ws.recv()
             log.info("Associated %d entities with device '%s'", len(entity_ids), device_name)
 
+    def remove_entities(self, entity_ids):
+        """Remove entities from Home Assistant via the WebSocket API."""
+        ws_url = self.url.replace("http", "ws", 1) + "/api/websocket"
+
+        with ws_connect(ws_url) as ws:
+            ws.recv()  # auth_required
+            ws.send(json.dumps({"type": "auth", "access_token": self.token}))
+            auth_result = json.loads(ws.recv())
+            if auth_result.get("type") != "auth_ok":
+                log.warning("WebSocket auth failed")
+                return
+
+            for i, entity_id in enumerate(entity_ids, start=1):
+                ws.send(json.dumps({
+                    "id": i,
+                    "type": "config/entity_registry/remove",
+                    "entity_id": entity_id,
+                }))
+                result = json.loads(ws.recv())
+                if result.get("success"):
+                    log.info("Removed %s", entity_id)
+                else:
+                    log.warning("Failed to remove %s: %s", entity_id,
+                                result.get("error", {}).get("message", "unknown error"))
+
 
 def collect_sensors():
     sensors = []
@@ -272,6 +297,14 @@ def cmd_publish(args):
             log.warning("Failed to associate with device '%s': %s", args.device, e)
 
 
+def cmd_remove(args):
+    creds = load_credentials()
+    ha = HomeAssistant(creds["url"], creds["token"])
+    sensors = collect_sensors()
+    entity_ids = [sensor["entity_id"] for sensor in sensors]
+    ha.remove_entities(entity_ids)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Publish system sensors to Home Assistant")
     subparsers = parser.add_subparsers(required=True)
@@ -285,6 +318,8 @@ def main():
     publish_parser = subparsers.add_parser("publish", help="Collect and publish sensors to Home Assistant")
     publish_parser.add_argument("--device", help="Device name in Home Assistant to group sensors under")
     publish_parser.set_defaults(func=cmd_publish)
+
+    subparsers.add_parser("remove", help="Remove all sensors from Home Assistant").set_defaults(func=cmd_remove)
 
     args = parser.parse_args()
     args.func(args)
