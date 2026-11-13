@@ -1,0 +1,36 @@
+#!/usr/bin/ansible-playbook -K
+---
+- hosts: localhost
+  gather_facts: no
+  become: yes
+
+  tasks:
+    - name: Install dependencies
+      dnf:
+        state: present
+        name:
+          - PackageKit
+          - python3-psutil
+          - python3-websockets
+
+    - name: Install ha-system-sensors script
+      copy:
+        src: ha-system-sensors.py
+        dest: /usr/bin/ha-system-sensors
+        mode: "0755"
+
+    - name: Install systemd service
+      copy:
+        src: ha-system-sensors.service
+        dest: /usr/lib/systemd/system/ha-system-sensors.service
+
+    - name: Install systemd timer
+      copy:
+        src: ha-system-sensors.timer
+        dest: /usr/lib/systemd/system/ha-system-sensors.timer
+
+    - name: Enable ha-system-sensors timer
+      service:
+        name: ha-system-sensors.timer
+        state: started
+        enabled: yes
