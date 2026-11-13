@@ -19,18 +19,21 @@
         dest: /usr/bin/ha-system-sensors
         mode: "0755"
 
-    - name: Install systemd service
+    - name: Install systemd user service
       copy:
         src: ha-system-sensors.service
-        dest: /usr/lib/systemd/system/ha-system-sensors.service
+        dest: /usr/lib/systemd/user/ha-system-sensors.service
 
-    - name: Install systemd timer
+    - name: Install systemd user timer
       copy:
         src: ha-system-sensors.timer
-        dest: /usr/lib/systemd/system/ha-system-sensors.timer
+        dest: /usr/lib/systemd/user/ha-system-sensors.timer
 
     - name: Enable ha-system-sensors timer
-      service:
+      become: no
+      systemd:
         name: ha-system-sensors.timer
         state: started
         enabled: yes
+        scope: user
+        daemon_reload: yes
