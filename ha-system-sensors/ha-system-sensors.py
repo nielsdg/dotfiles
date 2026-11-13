@@ -74,8 +74,10 @@ class Collector(abc.ABC):
             attrs["friendly_name"] = friendly_name
         if icon:
             attrs["icon"] = icon
+        unique_id = f"{HOSTNAME_SLUG}_{sensor_id}"
+        attrs["unique_id"] = unique_id
         return {
-            "entity_id": f"sensor.{HOSTNAME_SLUG}_{sensor_id}",
+            "entity_id": f"sensor.{unique_id}",
             "state": str(state),
             "attributes": attrs,
         }
